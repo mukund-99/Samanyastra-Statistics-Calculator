@@ -2,7 +2,6 @@
 let data = [];
 let charts = {};
 
-
 // DOM Elements
 document.addEventListener('DOMContentLoaded', function() {
     // Input and calculation buttons
@@ -182,7 +181,7 @@ function clearAll() {
 
 // Use sample data
 function useSampleData() {
-    document.getElementById('data-input').value = '123, 65, 75, 11, 3, 42, 88, 56, 29, 11';
+    document.getElementById('data-input').value = '123, 65, 75, 7, 3, 42, 88, 56, 29, 11';
     calculateStatistics();
 }
 
@@ -395,59 +394,7 @@ function generateChart() {
                     }
                 }
             };
-            break;
-            
-        case 'histogram':
-            const binCount = parseInt(document.getElementById('histogram-bins').value);
-            const min = Math.min(...data);
-            const max = Math.max(...data);
-            const binWidth = (max - min) / binCount;
-            
-            // Create bins
-            const bins = Array(binCount).fill(0);
-            data.forEach(value => {
-                const binIndex = Math.min(Math.floor((value - min) / binWidth), binCount - 1);
-                bins[binIndex]++;
-            });
-            
-            // Create bin labels
-            const binLabels = Array(binCount).fill(0).map((_, i) => {
-                const lowerBound = min + i * binWidth;
-                const upperBound = min + (i + 1) * binWidth;
-                return `${lowerBound.toFixed(2)} - ${upperBound.toFixed(2)}`;
-            });
-            
-            chartData = {
-                labels: binLabels,
-                datasets: [{
-                    label: 'Frequency',
-                    data: bins,
-                    backgroundColor: 'rgba(74, 111, 165, 0.7)',
-                    borderColor: 'rgba(74, 111, 165, 1)',
-                    borderWidth: 1
-                }]
-            };
-            chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Frequency'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Value Ranges'
-                        }
-                    }
-                }
-            };
-            break;
-            
+            break;  
         case 'line':
             chartData = {
                 labels: data.map((_, index) => `Item ${index + 1}`),
@@ -505,31 +452,6 @@ function generateChart() {
                 }
             };
             break;
-            
-        case 'box':
-            const stats = calculateDescriptiveStatistics(data);
-            
-            chartData = {
-                labels: ['Dataset'],
-                datasets: [{
-                    label: 'Box Plot',
-                    data: [{
-                        min: Math.min(...data),
-                        q1: stats.q1,
-                        median: stats.median,
-                        q3: stats.q3,
-                        max: Math.max(...data)
-                    }],
-                    backgroundColor: 'rgba(74, 111, 165, 0.7)',
-                    borderColor: 'rgba(74, 111, 165, 1)',
-                    borderWidth: 1
-                }]
-            };
-            chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false
-            };
-            break;
     }
     
     // Create chart
@@ -539,7 +461,6 @@ function generateChart() {
         options: chartOptions
     });
 }
-
 // Generate probability distribution
 function generateDistribution() {
     const distributionType = document.getElementById('distribution-type').value;
@@ -819,7 +740,98 @@ function runHypothesisTest() {
         `;
     }
 }
-
+// Run correlation analysis
+function runCorrelation() {
+    const correlationType = document.getElementById('correlation-type').value;
+    const yDataInput = document.getElementById('correlation-data-y').value;
+    const resultsContent = document.getElementById('correlation-results-content');
+    const chartContainer = document.getElementById('correlation-chart-container');
+    
+    try {
+        // Parse Y data
+        const yData = parseData(yDataInput);
+        
+        if (yData.length !== data.length) {
+            throw new Error('X and Y datasets must have the same length');
+        }
+        
+        let correlationCoefficient, interpretation;
+        
+        if (correlationType === 'pearson') {
+            // Calculate Pearson correlation coefficient
+            correlationCoefficient = calculatePearsonCorrelation(data, yData);
+            
+            // Interpret the correlation
+            interpretation = interpretCorrelation(correlationCoefficient);
+            
+            resultsContent.innerHTML = `
+                <p><strong>Pearson Correlation Coefficient</strong></p>
+                <p>r = ${correlationCoefficient.toFixed(4)}</p>
+                <p><strong>Interpretation:</strong> ${interpretation}</p>
+                <p>r² = ${Math.pow(correlationCoefficient, 2).toFixed(4)} (coefficient of determination)</p>
+            `;
+        } else { // Spearman
+            // Calculate Spearman rank correlation
+            correlationCoefficient = calculateSpearmanCorrelation(data, yData);
+            
+            // Interpret the correlation
+            interpretation = interpretCorrelation(correlationCoefficient);
+            
+            resultsContent.innerHTML = `
+                <p><strong>Spearman Rank Correlation Coefficient</strong></p>
+                <p>ρ = ${correlationCoefficient.toFixed(4)}</p>
+                <p><strong>Interpretation:</strong> ${interpretation}</p>
+            `;
+        }
+        
+        // Show chart container
+        chartContainer.style.display = 'block';
+        
+        // Create scatter plot
+        if (charts.correlation) {
+            charts.correlation.destroy();
+        }
+        
+        charts.correlation = new Chart(document.getElementById('correlation-chart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Data Points',
+                    data: data.map((x, i) => ({ x, y: yData[i] })),
+                    backgroundColor: 'rgba(74, 111, 165, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'X Values'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Y Values'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: `Scatter Plot (${correlationType === 'pearson' ? 'r' : 'ρ'} = ${correlationCoefficient.toFixed(4)})`
+                    }
+                }
+            }
+        });
+        
+    } catch (error) {
+        resultsContent.innerHTML = `<p>Error: ${error.message}</p>`;
+        chartContainer.style.display = 'none';
+    }
+}
 
 // Run regression analysis
 function runRegression() {
@@ -920,9 +932,80 @@ function runRegression() {
         chartContainer.style.display = 'none';
     }
 }
+// Statistical Distribution Functions
 
+// Normal distribution PDF
+function normalPDF(x, mean, sd) {
+    return (1 / (sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / sd, 2));
+}
 
+// Normal distribution CDF (approximation)
+function normalCDF(x, mean, sd) {
+    // Convert to standard normal
+    const z = (x - mean) / sd;
+    
+    // Approximation of the standard normal CDF
+    if (z < -6) return 0;
+    if (z > 6) return 1;
+    
+    let sum = 0;
+    let term = z;
+    let i = 3;
+    
+    while (Math.abs(term) > 1e-10) {
+        sum += term;
+        term = term * z * z / i;
+        i += 2;
+    }
+    
+    return 0.5 + sum * 0.3989422804014327; // 0.3989... = 1/sqrt(2*PI)
+}
 
+// Binomial PMF
+function binomialPMF(k, n, p) {
+    if (k < 0 || k > n) return 0;
+    
+    // Calculate binomial coefficient (n choose k)
+    let coeff = 1;
+    for (let i = 1; i <= k; i++) {
+        coeff *= (n - (i - 1)) / i;
+    }
+    
+    return coeff * Math.pow(p, k) * Math.pow(1 - p, n - k);
+}
+
+// Binomial CDF
+function binomialCDF(k, n, p) {
+    let sum = 0;
+    for (let i = 0; i <= k; i++) {
+        sum += binomialPMF(i, n, p);
+    }
+    return sum;
+}
+
+// Poisson PMF
+function poissonPMF(k, lambda) {
+    if (k < 0) return 0;
+    
+    // Calculate k!
+    let factorial = 1;
+    for (let i = 2; i <= k; i++) {
+        factorial *= i;
+    }
+    
+    return Math.exp(-lambda) * Math.pow(lambda, k) / factorial;
+}
+
+// Poisson CDF
+function poissonCDF(k, lambda) {
+    let sum = 0;
+    for (let i = 0; i <= k; i++) {
+        sum += poissonPMF(i, lambda);
+    }
+    return sum;
+}
+
+// Statistical Analysis Functions
 
 // Calculate Pearson correlation coefficient
 function calculatePearsonCorrelation(xData, yData) {
@@ -1054,4 +1137,32 @@ function calculateLinearRegression(xData, yData) {
     const regressionEquation = `Y = ${intercept.toFixed(4)} ${sign} ${slope.toFixed(4)}X`;
     
     return { slope, intercept, r2, regressionEquation };
+}
+// ------------------------------------------------------------------------------------------for download pdf button-----------------------------------------------------------
+function exportToPDF() {
+    const { jsPDF } = window.jspdf || window.jspdf.jsPDF;
+    const pdf = new jsPDF();
+
+    // Title
+    pdf.setFontSize(18);
+    pdf.text('Statistics Report', 10, 10);
+    pdf.setFontSize(12);
+
+    // Results get Data 
+    const statsText = document.getElementById('results-container').innerText.trim();
+    const formattedText = pdf.splitTextToSize(statsText, 180); // Text wrapping
+    pdf.text(formattedText, 10, 20);
+
+    // Chart (Canvas) add in pdf
+    const canvas = document.getElementById('dataChart');
+    if (canvas) {
+        try {
+            const chartImage = canvas.toDataURL('image/png');
+            pdf.addImage(chartImage, 'PNG', 10, pdf.internal.pageSize.height / 2, 180, 100);
+        } catch (error) {
+            console.error('Error adding chart image:', error);
+        }
+    }
+    // PDF download
+    pdf.save('statistics-report.pdf');
 }
