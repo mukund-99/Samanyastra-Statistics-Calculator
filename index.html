@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script> -->
+</head>
+<body>
+
+<div id="results-container" class="hidden">
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="descriptive">Descriptive Statistics</button>
+        <button class="tab-btn" data-tab="inferential">Inferential Statistics</button>
+        <button class="tab-btn" data-tab="distributions">Distributions</button>
+        <button class="tab-btn" data-tab="visualizations">Visualizations</button>
+        <button class="tab-btn" data-tab="data-table">Data Table</button>
+
+    </div>
+    <div class="tab-content">
+        <!-- Descriptive Statistics Tab -->
+        <div id="descriptive" class="tab-pane active">
+            <div class="stat-section">
+                <h2>Measures of Central Tendency</h2>
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <h3>Mean</h3>
+                        <div id="mean" class="stat-value">0</div>
+                        <p class="stat-description">Sum of all values divided by the count</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Median</h3>
+                        <div id="median" class="stat-value">0</div>
+                        <p class="stat-description">Middle value of the sorted data</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Mode</h3>
+                        <div id="mode" class="stat-value">0</div>
+                        <p class="stat-description">Most frequent value(s)</p>
+                    </div>
+                </div>
+            </div>
+

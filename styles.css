@@ -1,0 +1,32 @@
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--gray-200);
+    color: var(--gray-700);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .tab-btn:hover {
+    background-color: var(--gray-300);
+  }
+  
+  .tab-btn.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .tab-content {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+  }
