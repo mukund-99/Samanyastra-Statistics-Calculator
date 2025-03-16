@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Statistics Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Samanyastra Statistics Calculator</h1>
+            <p>Enter comma-separated numbers (e.g., 8, 9, 99, 45, 6)</p>
+        </header>
+
+        <div class="input-section">
+            <input type="text" id="data-input" placeholder="Enter numbers separated by commas">
+            <button id="calculate-btn">Calculate</button>
+            <button id="clear-btn">Clear</button>
+            <button id="sample-data-btn">Use Sample Data</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+
+        <div id="results-container" class="hidden">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="descriptive">Descriptive Statistics</button>
+                <button class="tab-btn" data-tab="inferential">Inferential Statistics</button>
+                <button class="tab-btn" data-tab="distributions">Distributions</button>
+                <button class="tab-btn" data-tab="visualizations">Visualizations</button>
+                <button class="tab-btn" data-tab="data-table">Data Table</button>
+                <button class="tab-btn" data-tab="data-table" onclick="exportToPDF()">Export PDF</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Descriptive Statistics Tab -->
+                <div id="descriptive" class="tab-pane active">
+                    <div class="stat-section">
+                        <h2>Measures of Central Tendency</h2>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <h3>Mean</h3>
+                                <div id="mean" class="stat-value">0</div>
+                                <p class="stat-description">Sum of all values divided by the count</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Median</h3>
+                                <div id="median" class="stat-value">0</div>
+                                <p class="stat-description">Middle value of the sorted data</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Mode</h3>
+                                <div id="mode" class="stat-value">0</div>
+                                <p class="stat-description">Most frequent value(s)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-section">
+                        <h2>Measures of Dispersion</h2>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <h3>Range</h3>
+                                <div id="range" class="stat-value">0</div>
+                                <p class="stat-description">Difference between max and min values</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Variance</h3>
+                                <div id="variance" class="stat-value">0</div>
+                                <p class="stat-description">Average of squared deviations from the mean</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Standard Deviation</h3>
+                                <div id="std-dev" class="stat-value">0</div>
+                                <p class="stat-description">Square root of variance</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>IQR</h3>
+                                <div id="iqr" class="stat-value">0</div>
+                                <p class="stat-description">Interquartile range (Q3-Q1)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-section">
+                        <h2>Measures of Shape</h2>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <h3>Skewness</h3>
+                                <div id="skewness" class="stat-value">0</div>
+                                <p class="stat-description">Measure of asymmetry</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Kurtosis</h3>
+                                <div id="kurtosis" class="stat-value">0</div>
+                                <p class="stat-description">Measure of "tailedness"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-section">
+                        <h2>Other Measures</h2>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <h3>Mean Deviation</h3>
+                                <div id="mean-deviation" class="stat-value">0</div>
+                                <p class="stat-description">Average absolute deviation from mean</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Coefficient of Variation</h3>
+                                <div id="cv" class="stat-value">0</div>
+                                <p class="stat-description">Relative standard deviation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inferential Statistics Tab -->
+                <div id="inferential" class="tab-pane">
+                    <div class="stat-section">
+                        <h2>Hypothesis Testing</h2>
+                        <div class="inferential-controls">
+                            <div class="control-group">
+                                <label for="hypothesis-test-type">Test Type:</label>
+                                <select id="hypothesis-test-type">
+                                    <option value="ttest">One-sample t-test</option>
+                                    <option value="ztest">One-sample z-test</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="hypothesis-mu">Hypothesized Mean (μ₀):</label>
+                                <input type="number" id="hypothesis-mu" value="0">
+                            </div>
+                            <div class="control-group" id="z-test-sigma-group" style="display: none;">
+                                <label for="hypothesis-sigma">Known Population Std Dev (σ):</label>
+                                <input type="number" id="hypothesis-sigma" value="1">
+                            </div>
+                            <div class="control-group">
+                                <label for="hypothesis-alpha">Significance Level (α):</label>
+                                <input type="number" id="hypothesis-alpha" value="0.05" min="0.01" max="0.1"
+                                    step="0.01">
+                            </div>
+                            <button id="run-hypothesis-test">Run Test</button>
+                        </div>
+                        <div id="hypothesis-results" class="results-panel">
+                            <h3>Results</h3>
+                            <div id="hypothesis-results-content">
+                                <p>Run a test to see results</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-section">
+                        <h2>Correlation Analysis</h2>
+                        <div class="inferential-controls">
+                            <div class="control-group">
+                                <label for="correlation-data-y">Second Dataset (Y values):</label>
+                                <input type="text" id="correlation-data-y"
+                                    placeholder="Enter Y values separated by commas">
+                            </div>
+                            <div class="control-group">
+                                <label for="correlation-type">Correlation Type:</label>
+                                <select id="correlation-type">
+                                    <option value="pearson">Pearson (linear)</option>
+                                    <option value="spearman">Spearman (rank)</option>
+                                </select>
+                            </div>
+                            <button id="run-correlation">Calculate Correlation</button>
+                        </div>
+                        <div id="correlation-results" class="results-panel">
+                            <h3>Results</h3>
+                            <div id="correlation-results-content">
+                                <p>Enter a second dataset to calculate correlation</p>
+                            </div>
+                        </div>
+                        <div id="correlation-chart-container" class="chart-container" style="display: none;">
+                            <canvas id="correlation-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="stat-section">
+                        <h2>Regression Analysis</h2>
+                        <div class="inferential-controls">
+                            <div class="control-group">
+                                <label for="regression-data-y">Second Dataset (Y values):</label>
+                                <input type="text" id="regression-data-y"
+                                    placeholder="Enter Y values separated by commas">
+                            </div>
+                            <div class="control-group">
+                                <label for="regression-type">Regression Type:</label>
+                                <select id="regression-type">
+                                    <option value="linear">Simple Linear Regression</option>
+                                </select>
+                            </div>
+                            <button id="run-regression">Calculate Regression</button>
+                        </div>
+                        <div id="regression-results" class="results-panel">
+                            <h3>Results</h3>
+                            <div id="regression-results-content">
+                                <p>Enter a second dataset to calculate regression</p>
+                            </div>
+                        </div>
+                        <div id="regression-chart-container" class="chart-container" style="display: none;">
+                            <canvas id="regression-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Distributions Tab -->
+                <div id="distributions" class="tab-pane">
+                    <div class="stat-section">
+                        <h2>Probability Distributions</h2>
+                        <div class="distribution-controls">
+                            <div class="control-group">
+                                <label for="distribution-type">Distribution Type:</label>
+                                <select id="distribution-type">
+                                    <option value="normal">Bell curve Graph OR Normal Distribution </option>
+                                    <option value="binomial">Binomial Distribution</option>
+                                    <option value="poisson">Poisson Distribution</option>
+                                </select>
+                            </div>
+
+                            <!-- Normal Distribution Parameters/Bell Curve Graph -->
+                            <div id="normal-params" class="distribution-params">
+                                <div class="control-group">
+                                    <label for="normal-mean">Mean (μ):</label>
+                                    <input type="number" id="normal-mean" value="0">
+                                </div>
+                                <div class="control-group">
+                                    <label for="normal-sd">Standard Deviation (σ):</label>
+                                    <input type="number" id="normal-sd" value="1" min="0.1" step="0.1">
+                                </div>
+                            </div>
+
+                            <!-- Binomial Distribution Parameters -->
+                            <div id="binomial-params" class="distribution-params" style="display: none;">
+                                <div class="control-group">
+                                    <label for="binomial-n">Number of Trials (n):</label>
+                                    <input type="number" id="binomial-n" value="10" min="1" step="1">
+                                </div>
+                                <div class="control-group">
+                                    <label for="binomial-p">Probability of Success (p):</label>
+                                    <input type="number" id="binomial-p" value="0.5" min="0" max="1" step="0.01">
+                                </div>
+                            </div>
+
+                            <!-- Poisson Distribution Parameters -->
+                            <div id="poisson-params" class="distribution-params" style="display: none;">
+                                <div class="control-group">
+                                    <label for="poisson-lambda">Rate (λ):</label>
+                                    <input type="number" id="poisson-lambda" value="5" min="0.1" step="0.1">
+                                </div>
+                            </div>
+
+                            <button id="generate-distribution">Generate Distribution</button>
+                        </div>
+
+                        <div id="distribution-chart-container" class="chart-container">
+                            <canvas id="distribution-chart"></canvas>
+                        </div>
+
+                        <div class="probability-calculator">
+                            <h3>Probability Calculator</h3>
+                            <div class="control-group">
+                                <label for="probability-type">Calculate Probability:</label>
+                                <select id="probability-type">
+                                    <option value="less-than">P(X ≤ x)</option>
+                                    <option value="greater-than">P(X ≥ x)</option>
+                                    <option value="between">P(a ≤ X ≤ b)</option>
+                                </select>
+                            </div>
+
+                            <div id="single-value-inputs">
+                                <div class="control-group">
+                                    <label for="probability-x">Value (x):</label>
+                                    <input type="number" id="probability-x" value="0">
+                                </div>
+                            </div>
+
+                            <div id="between-values-inputs" style="display: none;">
+                                <div class="control-group">
+                                    <label for="probability-a">Lower Bound (a):</label>
+                                    <input type="number" id="probability-a" value="-1">
+                                </div>
+                                <div class="control-group">
+                                    <label for="probability-b">Upper Bound (b):</label>
+                                    <input type="number" id="probability-b" value="1">
+                                </div>
+                            </div>
+
+                            <button id="calculate-probability">Calculate</button>
+
+                            <div id="probability-result" class="results-panel">
+                                <h3>Result</h3>
+                                <div id="probability-result-content">
+                                    <p>Generate a distribution and calculate probability</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualizations Tab -->
+                <div id="visualizations" class="tab-pane">
+                    <div class="chart-controls">
+                        <div class="control-group">
+                            <label for="chart-type">Chart Type:</label>
+                            <select id="chart-type">
+                                <option value="bar">Bar Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="pie">Pie Chart</option>
+                            </select>
+                        </div>
+                        <button id="generate-chart">Generate Chart</button>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="data-visualization-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Data Table Tab -->
+                <div id="data-table" class="tab-pane">
+                    <div class="data-table-container">
+                        <h2>Input Data</h2>
+                        <table id="input-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Index</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="data-table-container">
+                        <h2>Sorted Data</h2>
+                        <table id="sorted-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Index</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sorted data rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="data-table-container">
+                        <h2>Summary Statistics</h2>
+                        <table id="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>Statistic</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Summary statistics will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
