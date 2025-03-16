@@ -5,11 +5,11 @@
 | Name            | Email ID                        |
 |-----------------|---------------------------------|
 | Khedkar Mukund  | mkhedkar9373@gmail.com           |
-| Mayuri Malvade  | mayurimalvade26@gmail.com       |
+|  Bade Anjali    | badeanjali41@gmail.com           |
 | More Sakshi     | sakshimore79295@gmail.com       |
 | Amale Payal     | payalamale01@gmail.com          |
 | Dhokale Durga   | durgadhokle43@gmail.com        |
-| Bade Anjali     | badeanjali41@gmail.com         |
+| Mayuri Malvade  | mayurimalvade26@gmail.com      |
 
 ## Project Links
 - **Netlify Link:** [Netlify Deployment](https://statistics-project-port.netlify.app/)
