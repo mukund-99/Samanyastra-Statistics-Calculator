@@ -4,377 +4,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samanyastra Statistics Calculator</title>
+    <title>Samanyastra | Advanced Data Analytics</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Advanced Animations */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Particle Background */
+        .particle-background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Modern Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .advanced-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(-45deg, #4a6fa5, #2c3e50, #1a2639);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            background: linear-gradient(45deg, #fff, #a0c4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s 0.2s forwards;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            font-size: 35px;
+            text-decoration: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .feature-card:hover::before {
+            animation: shine 1.5s;
+        }
+
+        /* Live Demo Section */
+        .demo-section {
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .demo-card {
+            padding: 2rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Animated Statistics */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            background: linear-gradient(45deg, #4a6fa5, #2c3e50);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keyframes */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            from {
+                left: -50%;
+            }
+
+            to {
+                left: 150%;
+            }
+        }
+
+        .no-underline {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>Samanyastra Statistics Calculator</h1>
-            <p>Enter comma-separated numbers (e.g., 8, 9, 99, 45, 6)</p>
-        </header>
+    <!-- Animated Background -->
+    <canvas class="particle-background" id="particles"></canvas>
 
-        <div class="input-section">
-            <input type="text" id="data-input" placeholder="Enter numbers separated by commas">
-            <button id="calculate-btn">Calculate</button>
-            <button id="clear-btn">Clear</button>
-            <button id="sample-data-btn">Use Sample Data</button>
-        </div>
+    <!-- Hero Section -->
+    <section class="advanced-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Turn Data into Decisions with Samanyastra Statistics!</h1><br>
+            <p class="hero-subtitle">Samanyastra Statistics Calculator empowers you to analyze data effortlessly,
+                providing accurate results in just a few clicks</p><br>
 
-        <div id="error-message" class="error-message"></div>
-
-        <div id="results-container" class="hidden">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="descriptive">Descriptive Statistics</button>
-                <button class="tab-btn" data-tab="inferential">Inferential Statistics</button>
-                <button class="tab-btn" data-tab="distributions">Distributions</button>
-                <button class="tab-btn" data-tab="visualizations">Visualizations</button>
-                <button class="tab-btn" data-tab="data-table">Data Table</button>
-                <button class="tab-btn" data-tab="data-table" onclick="exportToPDF()">Export PDF</button>
+            <div class="cta-buttons">
+                <button class="glass-card" onclick="scrollToDemo()"
+                    style="padding: 1rem 2rem; border: none; color: white; margin-right: 1rem;">
+                    <i class="fas fa-play"></i> Live Demo
+                </button>
+                <button class="glass-card"
+                    onclick="window.open('https://github.com/mukund-99/Samanyastra-Statistics-Calculator')"
+                    style="padding: 1rem 2rem; border: none; color: white;">
+                    <i class="fab fa-github"></i> GitHub
+                </button>
             </div>
 
-            <div class="tab-content">
-                <!-- Descriptive Statistics Tab -->
-                <div id="descriptive" class="tab-pane active">
-                    <div class="stat-section">
-                        <h2>Measures of Central Tendency</h2>
-                        <div class="stat-cards">
-                            <div class="stat-card">
-                                <h3>Mean</h3>
-                                <div id="mean" class="stat-value">0</div>
-                                <p class="stat-description">Sum of all values divided by the count</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Median</h3>
-                                <div id="median" class="stat-value">0</div>
-                                <p class="stat-description">Middle value of the sorted data</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Mode</h3>
-                                <div id="mode" class="stat-value">0</div>
-                                <p class="stat-description">Most frequent value(s)</p>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Feature Grid -->
+            <a href="second.html" class="no-underline">
+                <div class="feature-grid">
+                    <div class="glass-card feature-card">
+                        <!-- <i class="fas fa-brain" style="font-size: 2rem; color: #6fa3ff; margin-bottom: 1rem;"></i> -->
+                        <h3>Get Start Using Statistics Calculator</h3>
 
-                    <div class="stat-section">
-                        <h2>Measures of Dispersion</h2>
-                        <div class="stat-cards">
-                            <div class="stat-card">
-                                <h3>Range</h3>
-                                <div id="range" class="stat-value">0</div>
-                                <p class="stat-description">Difference between max and min values</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Variance</h3>
-                                <div id="variance" class="stat-value">0</div>
-                                <p class="stat-description">Average of squared deviations from the mean</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Standard Deviation</h3>
-                                <div id="std-dev" class="stat-value">0</div>
-                                <p class="stat-description">Square root of variance</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>IQR</h3>
-                                <div id="iqr" class="stat-value">0</div>
-                                <p class="stat-description">Interquartile range (Q3-Q1)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="stat-section">
-                        <h2>Measures of Shape</h2>
-                        <div class="stat-cards">
-                            <div class="stat-card">
-                                <h3>Skewness</h3>
-                                <div id="skewness" class="stat-value">0</div>
-                                <p class="stat-description">Measure of asymmetry</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Kurtosis</h3>
-                                <div id="kurtosis" class="stat-value">0</div>
-                                <p class="stat-description">Measure of "tailedness"</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="stat-section">
-                        <h2>Other Measures</h2>
-                        <div class="stat-cards">
-                            <div class="stat-card">
-                                <h3>Mean Deviation</h3>
-                                <div id="mean-deviation" class="stat-value">0</div>
-                                <p class="stat-description">Average absolute deviation from mean</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Coefficient of Variation</h3>
-                                <div id="cv" class="stat-value">0</div>
-                                <p class="stat-description">Relative standard deviation</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </a>
+        </div>
+    </section>
 
-                <!-- Inferential Statistics Tab -->
-                <div id="inferential" class="tab-pane">
-                    <div class="stat-section">
-                        <h2>Hypothesis Testing</h2>
-                        <div class="inferential-controls">
-                            <div class="control-group">
-                                <label for="hypothesis-test-type">Test Type:</label>
-                                <select id="hypothesis-test-type">
-                                    <option value="ttest">One-sample t-test</option>
-                                    <option value="ztest">One-sample z-test</option>
-                                </select>
-                            </div>
-                            <div class="control-group">
-                                <label for="hypothesis-mu">Hypothesized Mean (μ₀):</label>
-                                <input type="number" id="hypothesis-mu" value="0">
-                            </div>
-                            <div class="control-group" id="z-test-sigma-group" style="display: none;">
-                                <label for="hypothesis-sigma">Known Population Std Dev (σ):</label>
-                                <input type="number" id="hypothesis-sigma" value="1">
-                            </div>
-                            <div class="control-group">
-                                <label for="hypothesis-alpha">Significance Level (α):</label>
-                                <input type="number" id="hypothesis-alpha" value="0.05" min="0.01" max="0.1"
-                                    step="0.01">
-                            </div>
-                            <button id="run-hypothesis-test">Run Test</button>
-                        </div>
-                        <div id="hypothesis-results" class="results-panel">
-                            <h3>Results</h3>
-                            <div id="hypothesis-results-content">
-                                <p>Run a test to see results</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="stat-section">
-                        <h2>Correlation Analysis</h2>
-                        <div class="inferential-controls">
-                            <div class="control-group">
-                                <label for="correlation-data-y">Second Dataset (Y values):</label>
-                                <input type="text" id="correlation-data-y"
-                                    placeholder="Enter Y values separated by commas">
-                            </div>
-                            <div class="control-group">
-                                <label for="correlation-type">Correlation Type:</label>
-                                <select id="correlation-type">
-                                    <option value="pearson">Pearson (linear)</option>
-                                    <option value="spearman">Spearman (rank)</option>
-                                </select>
-                            </div>
-                            <button id="run-correlation">Calculate Correlation</button>
-                        </div>
-                        <div id="correlation-results" class="results-panel">
-                            <h3>Results</h3>
-                            <div id="correlation-results-content">
-                                <p>Enter a second dataset to calculate correlation</p>
-                            </div>
-                        </div>
-                        <div id="correlation-chart-container" class="chart-container" style="display: none;">
-                            <canvas id="correlation-chart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="stat-section">
-                        <h2>Regression Analysis</h2>
-                        <div class="inferential-controls">
-                            <div class="control-group">
-                                <label for="regression-data-y">Second Dataset (Y values):</label>
-                                <input type="text" id="regression-data-y"
-                                    placeholder="Enter Y values separated by commas">
-                            </div>
-                            <div class="control-group">
-                                <label for="regression-type">Regression Type:</label>
-                                <select id="regression-type">
-                                    <option value="linear">Simple Linear Regression</option>
-                                </select>
-                            </div>
-                            <button id="run-regression">Calculate Regression</button>
-                        </div>
-                        <div id="regression-results" class="results-panel">
-                            <h3>Results</h3>
-                            <div id="regression-results-content">
-                                <p>Enter a second dataset to calculate regression</p>
-                            </div>
-                        </div>
-                        <div id="regression-chart-container" class="chart-container" style="display: none;">
-                            <canvas id="regression-chart"></canvas>
-                        </div>
-                    </div>
+    <!-- Live Demo Section -->
+    <section class="demo-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">Interactive Demo</h2>
+            <div class="demo-grid">
+                <div class="glass-card demo-card">
+                    <canvas id="liveLineChart"></canvas>
                 </div>
-
-                <!-- Distributions Tab -->
-                <div id="distributions" class="tab-pane">
-                    <div class="stat-section">
-                        <h2>Probability Distributions</h2>
-                        <div class="distribution-controls">
-                            <div class="control-group">
-                                <label for="distribution-type">Distribution Type:</label>
-                                <select id="distribution-type">
-                                    <option value="normal">Bell curve Graph OR Normal Distribution </option>
-                                    <option value="binomial">Binomial Distribution</option>
-                                    <option value="poisson">Poisson Distribution</option>
-                                </select>
-                            </div>
-
-                            <!-- Normal Distribution Parameters/Bell Curve Graph -->
-                            <div id="normal-params" class="distribution-params">
-                                <div class="control-group">
-                                    <label for="normal-mean">Mean (μ):</label>
-                                    <input type="number" id="normal-mean" value="0">
-                                </div>
-                                <div class="control-group">
-                                    <label for="normal-sd">Standard Deviation (σ):</label>
-                                    <input type="number" id="normal-sd" value="1" min="0.1" step="0.1">
-                                </div>
-                            </div>
-
-                            <!-- Binomial Distribution Parameters -->
-                            <div id="binomial-params" class="distribution-params" style="display: none;">
-                                <div class="control-group">
-                                    <label for="binomial-n">Number of Trials (n):</label>
-                                    <input type="number" id="binomial-n" value="10" min="1" step="1">
-                                </div>
-                                <div class="control-group">
-                                    <label for="binomial-p">Probability of Success (p):</label>
-                                    <input type="number" id="binomial-p" value="0.5" min="0" max="1" step="0.01">
-                                </div>
-                            </div>
-
-                            <!-- Poisson Distribution Parameters -->
-                            <div id="poisson-params" class="distribution-params" style="display: none;">
-                                <div class="control-group">
-                                    <label for="poisson-lambda">Rate (λ):</label>
-                                    <input type="number" id="poisson-lambda" value="5" min="0.1" step="0.1">
-                                </div>
-                            </div>
-
-                            <button id="generate-distribution">Generate Distribution</button>
-                        </div>
-
-                        <div id="distribution-chart-container" class="chart-container">
-                            <canvas id="distribution-chart"></canvas>
-                        </div>
-
-                        <div class="probability-calculator">
-                            <h3>Probability Calculator</h3>
-                            <div class="control-group">
-                                <label for="probability-type">Calculate Probability:</label>
-                                <select id="probability-type">
-                                    <option value="less-than">P(X ≤ x)</option>
-                                    <option value="greater-than">P(X ≥ x)</option>
-                                    <option value="between">P(a ≤ X ≤ b)</option>
-                                </select>
-                            </div>
-
-                            <div id="single-value-inputs">
-                                <div class="control-group">
-                                    <label for="probability-x">Value (x):</label>
-                                    <input type="number" id="probability-x" value="0">
-                                </div>
-                            </div>
-
-                            <div id="between-values-inputs" style="display: none;">
-                                <div class="control-group">
-                                    <label for="probability-a">Lower Bound (a):</label>
-                                    <input type="number" id="probability-a" value="-1">
-                                </div>
-                                <div class="control-group">
-                                    <label for="probability-b">Upper Bound (b):</label>
-                                    <input type="number" id="probability-b" value="1">
-                                </div>
-                            </div>
-
-                            <button id="calculate-probability">Calculate</button>
-
-                            <div id="probability-result" class="results-panel">
-                                <h3>Result</h3>
-                                <div id="probability-result-content">
-                                    <p>Generate a distribution and calculate probability</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Visualizations Tab -->
-                <div id="visualizations" class="tab-pane">
-                    <div class="chart-controls">
-                        <div class="control-group">
-                            <label for="chart-type">Chart Type:</label>
-                            <select id="chart-type">
-                                <option value="bar">Bar Chart</option>
-                                <option value="line">Line Chart</option>
-                                <option value="pie">Pie Chart</option>
-                            </select>
-                        </div>
-                        <button id="generate-chart">Generate Chart</button>
-                    </div>
-
-                    <div class="chart-container">
-                        <canvas id="data-visualization-chart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Data Table Tab -->
-                <div id="data-table" class="tab-pane">
-                    <div class="data-table-container">
-                        <h2>Input Data</h2>
-                        <table id="input-data-table">
-                            <thead>
-                                <tr>
-                                    <th>Index</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="data-table-container">
-                        <h2>Sorted Data</h2>
-                        <table id="sorted-data-table">
-                            <thead>
-                                <tr>
-                                    <th>Index</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Sorted data rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="data-table-container">
-                        <h2>Summary Statistics</h2>
-                        <table id="summary-table">
-                            <thead>
-                                <tr>
-                                    <th>Statistic</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Summary statistics will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="glass-card demo-card">
+                    <canvas id="liveBarChart"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="script.js"></script>
+    </section>
+
+
+
+    <script>
+        // Particle Animation
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.speedX = Math.random() * 3 - 1.5;
+                    this.speedY = Math.random() * 3 - 1.5;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+
+                draw() {
+                    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                for (let i = 0; i < 100; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            init();
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                init();
+            });
+        }
+
+        // Animated Number Counters
+        function animateNumbers() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-count');
+                const duration = 2000;
+                const start = Date.now();
+
+                const updateCount = () => {
+                    const elapsed = Date.now() - start;
+                    const progress = elapsed / duration;
+                    const current = progress < 1 ? Math.floor(target * progress) : target;
+                    counter.textContent = target % 1 === 0 ? current : current.toFixed(1);
+                    if (progress < 1) requestAnimationFrame(updateCount);
+                };
+
+                requestAnimationFrame(updateCount);
+            });
+        }
+
+        // Initialize Charts
+        function initDemoCharts() {
+            // Line Chart
+            new Chart(document.getElementById('liveLineChart'), {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 20 }, (_, i) => i + 1),
+                    datasets: [{
+                        label: 'Real-time Data',
+                        data: Array.from({ length: 20 }, () => Math.floor(Math.random() * 100)),
+                        borderColor: '#4a6fa5',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(74, 111, 165, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Bar Chart
+            new Chart(document.getElementById('liveBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Quarterly Performance',
+                        data: [65, 59, 80, 81],
+                        backgroundColor: 'rgba(74, 111, 165, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            initDemoCharts();
+            animateNumbers();
+        });
+
+        function scrollToDemo() {
+            document.querySelector('.demo-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
 
 </html>
