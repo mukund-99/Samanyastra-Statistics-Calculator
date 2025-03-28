@@ -193,7 +193,7 @@ function displayDescriptiveStatistics() {
     // Update DOM elements with calculated values
     document.getElementById('mean').textContent = stats.mean.toFixed(4);
     document.getElementById('median').textContent = stats.median.toFixed(4);
-    document.getElementById('mode').textContent = Array.isArray(stats.mode) ? stats.mode.join(', ') : stats.mode.toFixed(4);
+    document.getElementById('mode').textContent = Array.isArray(stats.mode) ? stats.mode.join(', ') : stats.mode.toFixed(0);
     document.getElementById('range').textContent = stats.range.toFixed(4);
     document.getElementById('variance').textContent = stats.variance.toFixed(4);
     document.getElementById('std-dev').textContent = stats.standardDeviation.toFixed(4);
